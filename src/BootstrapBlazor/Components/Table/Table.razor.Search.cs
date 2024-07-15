@@ -31,7 +31,7 @@ public partial class Table<TItem>
     /// 获得/设置 SearchModel 实例
     /// </summary>
     [Parameter]
-    public TItem SearchModel { get; set; } = new TItem();
+    public TItem SearchModel { get; set; } = default!; // Init in OnInitialized
 
     /// <summary>
     /// 获得/设置 自定义搜索模型 <see cref="CustomerSearchTemplate"/>
@@ -139,7 +139,7 @@ public partial class Table<TItem>
         }
         else if (SearchTemplate == null)
         {
-            Utility.Reset(SearchModel);
+            Utility.Reset(SearchModel, InitializeItem);
         }
 
         PageIndex = 1;

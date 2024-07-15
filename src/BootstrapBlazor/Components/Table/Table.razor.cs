@@ -1445,6 +1445,12 @@ public partial class Table<TItem> : ITable, IModelEqualityComparer<TItem> where 
     public Func<string, Task<float>>? OnAutoFitContentAsync { get; set; }
 
     /// <summary>
+    /// 自定义初始化对象方法
+    /// </summary>
+    [Parameter]
+    public Func<TItem>? OnInitializeItem { get; set; }
+
+    /// <summary>
     /// 重置列方法 由 JavaScript 脚本调用
     /// </summary>
     /// <param name="originIndex"></param>
@@ -1548,6 +1554,11 @@ public partial class Table<TItem> : ITable, IModelEqualityComparer<TItem> where 
     private void OnTouchEnd()
     {
         TouchStart = false;
+    }
+
+    private TItem InitializeItem()
+    {
+        return OnInitializeItem != null ? OnInitializeItem() : Activator.CreateInstance<TItem>();
     }
 
     /// <summary>
