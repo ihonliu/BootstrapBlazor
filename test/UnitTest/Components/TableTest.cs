@@ -7984,6 +7984,46 @@ public class TableTest : TableTestBase
         });
     }
 
+    [Fact]
+    public void InitItem_Ok()
+    {
+        var localizer = Context.Services.GetRequiredService<IStringLocalizer<FooWithRequiredMember>>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Table<FooWithRequiredMember>>(pb =>
+            {
+                pb.Add(a => a.OnInitializeItem, InitFooWithRequiredMember);
+                pb.Add(a => a.OnQueryAsync, OnQueryAsync(localizer));
+                pb.Add(a => a.TableColumns, foo => builder =>
+                {
+                    builder.OpenComponent<TableColumn<FooWithRequiredMember, string>>(0);
+                    builder.AddAttribute(1, "Field", "Name");
+                    builder.AddAttribute(2, "FieldExpression", Utility.GenerateValueExpression(foo, "Name", typeof(string)));
+                    builder.CloseComponent();
+                });
+            });
+        });
+    }
+
+    private FooWithRequiredMember InitFooWithRequiredMember()
+    {
+        return new FooWithRequiredMember() { RequiredString = "123" };
+    }
+
+    private static Func<QueryPageOptions, Task<QueryData<FooWithRequiredMember>>> OnQueryAsync(IStringLocalizer<FooWithRequiredMember> localizer, bool isSearch = true, bool isAdvanceSearch = true, bool isFilter = true, bool isSorted = true) => new(op =>
+    {
+        var items = FooWithRequiredMember.GenerateFoo(localizer, 5);
+        return Task.FromResult(new QueryData<FooWithRequiredMember>()
+        {
+            Items = items,
+            TotalCount = 5,
+            IsAdvanceSearch = isAdvanceSearch,
+            IsFiltered = isFilter,
+            IsSearch = isSearch,
+            IsSorted = isSorted
+        });
+    });
+
     private static DataTable CreateDataTable(IStringLocalizer<Foo> localizer)
     {
         var userData = new DataTable();

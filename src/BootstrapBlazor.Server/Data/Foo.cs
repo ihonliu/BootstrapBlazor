@@ -196,6 +196,61 @@ public class Foo
 }
 
 /// <summary>
+/// Demo示例数据, 加入required关键字 <br/>
+/// Demo sample data, add required keyword
+/// </summary>
+public class FooWithRequiredMember : Foo
+{
+    /// <summary>
+    /// required属性
+    /// required property
+    /// </summary>
+    [Display(Name = "必须项")]
+    [AutoGenerateColumn(Order = 90)]
+    public required string RequiredString { get; set; }
+
+    #region StatisticMethods
+
+    /// <summary>
+    /// 生成FooWithRequiredMember类,随机数据
+    /// Generate FooWithRequiredMember class, random data
+    /// </summary>
+    /// <param name="localizer"></param>
+    /// <returns></returns>
+    public static FooWithRequiredMember Generate(IStringLocalizer<FooWithRequiredMember> localizer) => new()
+    {
+        Id = 1,
+        Name = localizer["Foo.Name", "1000"],
+        DateTime = System.DateTime.Now,
+        Address = localizer["Foo.Address", $"{Random.Next(1000, 2000)}"],
+        Count = Random.Next(1, 100),
+        Complete = Random.Next(1, 100) > 50,
+        Education = Random.Next(1, 100) > 50 ? EnumEducation.Primary : EnumEducation.Middle,
+        RequiredString = "RequiredString"
+    };
+
+    /// <summary>
+    /// 生成 FooWithRequiredMember 类,随机数据
+    /// Generate FooWithRequiredMember class, random data
+    /// </summary>
+    /// <returns>返回一个FooWithRequiredMember类的List，Return a List of FooWithRequiredMember class</returns>
+    public static List<FooWithRequiredMember> GenerateFoo(IStringLocalizer<FooWithRequiredMember> localizer, int count = 80) => Enumerable.Range(1, count).Select(i => new FooWithRequiredMember()
+    {
+        Id = i,
+        Name = localizer["Foo.Name", $"{i:d4}"],
+        DateTime = System.DateTime.Now.AddDays(i - 1),
+        Address = localizer["Foo.Address", $"{Random.Next(1000, 2000)}"],
+        Count = Random.Next(1, 100),
+        Complete = Random.Next(1, 100) > 50,
+        Education = Random.Next(1, 100) > 50 ? EnumEducation.Primary : EnumEducation.Middle,
+        ReadonlyColumn = Random.Next(10, 50),
+        RequiredString = "RequiredString"
+    }).ToList();
+
+    #endregion
+}
+
+/// <summary>
 ///
 /// </summary>
 public enum EnumEducation
