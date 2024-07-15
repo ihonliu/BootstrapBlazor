@@ -681,6 +681,9 @@ public partial class Table<TItem> : ITable, IModelEqualityComparer<TItem> where 
     {
         base.OnInitialized();
 
+        // 初始化SearchModel, Initialize SearchModel
+        SearchModel = InitializeItem();
+
         // 初始化节点缓存
         TreeNodeCache ??= new(Equals);
 

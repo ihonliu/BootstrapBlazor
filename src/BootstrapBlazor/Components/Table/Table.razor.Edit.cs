@@ -272,7 +272,7 @@ public partial class Table<TItem>
         }
         else
         {
-            EditModel = new TItem();
+            EditModel = InitializeItem();
             if (Items == null)
             {
                 var d = DataService ?? InjectDataService;
